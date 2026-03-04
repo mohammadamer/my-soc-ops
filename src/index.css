@@ -8,6 +8,35 @@
   --color-bingo: #fbbf24;
 }
 
+:root {
+  --bg: #fff;
+  --fg: #222;
+  --accent: #6366f1;
+  --accent2: #f43f5e;
+  --border: #222;
+  --square-bg: #fff;
+  --square-fg: #222;
+  --modal-bg: #fff;
+  --modal-fg: #222;
+  --button-bg: #6366f1;
+  --button-fg: #fff;
+  --free-space-bg: #f43f5e;
+  --free-space-fg: #fff;
+  --font: 'Inter', sans-serif;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  transition: background 0.3s, color 0.3s;
+}
+
+#root {
+  height: 100%;
+}
+
 html,
 body,
 #root {
