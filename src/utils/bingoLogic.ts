@@ -64,6 +64,14 @@ export function generateScavengerList(): BingoSquareData[] {
 }
 
 /**
+ * Generate a shuffled deck of 24 question strings for Card Deck Shuffle mode.
+ * Returns newest card at the end of the array so callers can pop() to draw.
+ */
+export function generateDeck(): string[] {
+  return shuffleArray(questions).slice(0, 24);
+}
+
+/**
  * Toggle a square's marked state
  */
 export function toggleSquare(board: BingoSquareData[], squareId: number): BingoSquareData[] {

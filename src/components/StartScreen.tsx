@@ -1,9 +1,10 @@
 interface StartScreenProps {
   readonly onStartBingo: () => void;
   readonly onStartScavenger: () => void;
+  readonly onStartCardDeck: () => void;
 }
 
-export function StartScreen({ onStartBingo, onStartScavenger }: StartScreenProps) {
+export function StartScreen({ onStartBingo, onStartScavenger, onStartCardDeck }: StartScreenProps) {
   return (
     <div className="flex flex-col items-center justify-center min-h-full p-6" style={{ background: 'var(--bg)', color: 'var(--fg)', fontFamily: 'var(--font)' }}>
       <div className="text-center max-w-sm w-full">
@@ -28,7 +29,7 @@ export function StartScreen({ onStartBingo, onStartScavenger }: StartScreenProps
         </div>
 
         {/* Scavenger Hunt mode card */}
-        <div className="rounded-lg p-5 shadow-sm border text-left" style={{ background: 'var(--square-bg)', color: 'var(--square-fg)', border: '2px solid var(--border)' }}>
+        <div className="rounded-lg p-5 shadow-sm border mb-4 text-left" style={{ background: 'var(--square-bg)', color: 'var(--square-fg)', border: '2px solid var(--border)' }}>
           <h2 className="font-semibold mb-1" style={{ color: 'var(--accent)' }}>Scavenger Hunt</h2>
           <ul className="text-sm space-y-1 mb-4" style={{ color: 'var(--fg)' }}>
             <li>• Same questions shown as a checklist</li>
@@ -41,6 +42,23 @@ export function StartScreen({ onStartBingo, onStartScavenger }: StartScreenProps
             style={{ background: 'var(--button-bg)', color: 'var(--button-fg)' }}
           >
             Play Scavenger Hunt
+          </button>
+        </div>
+
+        {/* Card Deck Shuffle mode card */}
+        <div className="rounded-lg p-5 shadow-sm border text-left" style={{ background: 'var(--square-bg)', color: 'var(--square-fg)', border: '2px solid var(--border)' }}>
+          <h2 className="font-semibold mb-1" style={{ color: 'var(--accent)' }}>Card Deck Shuffle</h2>
+          <ul className="text-sm space-y-1 mb-4" style={{ color: 'var(--fg)' }}>
+            <li>• Pass the device around the group</li>
+            <li>• Each player taps to flip their card</li>
+            <li>• 24 unique cards — then the deck is empty!</li>
+          </ul>
+          <button
+            onClick={onStartCardDeck}
+            className="w-full font-semibold py-3 px-6 rounded-lg text-base transition-colors"
+            style={{ background: 'var(--button-bg)', color: 'var(--button-fg)' }}
+          >
+            Play Card Deck Shuffle
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
   generateBoard,
+  generateDeck,
   generateScavengerList,
   toggleSquare,
   checkBingo,
@@ -286,6 +287,31 @@ describe('bingoLogic', () => {
 
       const reverted = toggleSquare(updated, target.id);
       expect(reverted[0].isMarked).toBe(false);
+    });
+  });
+
+  describe('generateDeck', () => {
+    it('should return exactly 24 strings', () => {
+      expect(generateDeck()).toHaveLength(24);
+    });
+
+    it('should have no empty strings', () => {
+      generateDeck().forEach((s) => expect(s.length).toBeGreaterThan(0));
+    });
+
+    it('should only contain texts from the known questions pool', () => {
+      generateDeck().forEach((s) => expect(questions).toContain(s));
+    });
+
+    it('should have no duplicate texts', () => {
+      const deck = generateDeck();
+      expect(new Set(deck).size).toBe(24);
+    });
+
+    it('should produce a different order on successive calls', () => {
+      const results = Array.from({ length: 5 }, () => generateDeck().join('|'));
+      const allIdentical = results.every((r) => r === results[0]);
+      expect(allIdentical).toBe(false);
     });
   });
 });

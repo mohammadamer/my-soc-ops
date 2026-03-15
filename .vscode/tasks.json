@@ -23,6 +23,15 @@
 				"kind": "build",
 				"isDefault": true
 			}
+		},
+		{
+			"label": "lint-build-test",
+			"type": "shell",
+			"command": "npm run lint && npm run build && npm run test",
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
 		}
 	]
 }

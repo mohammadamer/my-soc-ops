@@ -2,9 +2,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useBingoGame } from './hooks/useBingoGame';
 import { useScavengerGame } from './hooks/useScavengerGame';
+import { useCardDeckGame } from './hooks/useCardDeckGame';
 import { StartScreen } from './components/StartScreen';
 import { GameScreen } from './components/GameScreen';
 import { ScavengerScreen } from './components/ScavengerScreen';
+import { CardDeckScreen } from './components/CardDeckScreen';
 import { BingoModal } from './components/BingoModal';
 import { defaultTheme } from './theme';
 import type { Theme } from './theme';
@@ -40,6 +42,18 @@ function App() {
     resetGame: resetScavenger,
   } = useScavengerGame();
 
+  const {
+    gameState: cardDeckState,
+    currentCard,
+    drawnCount,
+    totalCards,
+    startGame: startCardDeck,
+    drawCard,
+    nextCard,
+    shuffleAgain,
+    resetGame: resetCardDeck,
+  } = useCardDeckGame();
+
   const [theme, setTheme] = useState<Theme>(defaultTheme);
 
   const handleThemeChange = useCallback((t: Theme) => {
@@ -51,7 +65,7 @@ function App() {
     applyTheme(theme);
   }, [theme]);
 
-  const showStart = gameState === 'start' && scavengerState === 'start';
+  const showStart = gameState === 'start' && scavengerState === 'start' && cardDeckState === 'start';
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center" style={{ background: 'var(--bg)', color: 'var(--fg)', fontFamily: 'var(--font)' }}>
@@ -59,7 +73,7 @@ function App() {
         <ThemePicker onThemeChange={handleThemeChange} />
       </div>
       {showStart ? (
-        <StartScreen onStartBingo={startGame} onStartScavenger={startScavenger} />
+        <StartScreen onStartBingo={startGame} onStartScavenger={startScavenger} onStartCardDeck={startCardDeck} />
       ) : scavengerState === 'playing' ? (
         <ScavengerScreen
           items={items}
@@ -67,6 +81,17 @@ function App() {
           totalCount={totalCount}
           onToggle={toggleItem}
           onReset={resetScavenger}
+        />
+      ) : cardDeckState !== 'start' ? (
+        <CardDeckScreen
+          gameState={cardDeckState as 'drawing' | 'revealed' | 'empty'}
+          currentCard={currentCard}
+          drawnCount={drawnCount}
+          totalCards={totalCards}
+          onDraw={drawCard}
+          onNext={nextCard}
+          onShuffle={shuffleAgain}
+          onReset={resetCardDeck}
         />
       ) : (
         <>
