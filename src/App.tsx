@@ -1,8 +1,10 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useBingoGame } from './hooks/useBingoGame';
+import { useScavengerGame } from './hooks/useScavengerGame';
 import { StartScreen } from './components/StartScreen';
 import { GameScreen } from './components/GameScreen';
+import { ScavengerScreen } from './components/ScavengerScreen';
 import { BingoModal } from './components/BingoModal';
 import { defaultTheme } from './theme';
 import type { Theme } from './theme';
@@ -28,6 +30,16 @@ function App() {
     dismissModal,
   } = useBingoGame();
 
+  const {
+    gameState: scavengerState,
+    items,
+    markedCount,
+    totalCount,
+    startGame: startScavenger,
+    toggleItem,
+    resetGame: resetScavenger,
+  } = useScavengerGame();
+
   const [theme, setTheme] = useState<Theme>(defaultTheme);
 
   const handleThemeChange = useCallback((t: Theme) => {
@@ -39,13 +51,23 @@ function App() {
     applyTheme(theme);
   }, [theme]);
 
+  const showStart = gameState === 'start' && scavengerState === 'start';
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center" style={{ background: 'var(--bg)', color: 'var(--fg)', fontFamily: 'var(--font)' }}>
       <div className="w-full max-w-2xl mx-auto px-4 py-4">
         <ThemePicker onThemeChange={handleThemeChange} />
       </div>
-      {gameState === 'start' ? (
-        <StartScreen onStart={startGame} />
+      {showStart ? (
+        <StartScreen onStartBingo={startGame} onStartScavenger={startScavenger} />
+      ) : scavengerState === 'playing' ? (
+        <ScavengerScreen
+          items={items}
+          markedCount={markedCount}
+          totalCount={totalCount}
+          onToggle={toggleItem}
+          onReset={resetScavenger}
+        />
       ) : (
         <>
           <GameScreen

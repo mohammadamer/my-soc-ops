@@ -1,11 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
   generateBoard,
+  generateScavengerList,
   toggleSquare,
   checkBingo,
   getWinningSquareIds,
   type BingoSquareData,
 } from './bingoLogic';
+import { questions } from '../data/questions';
 
 describe('bingoLogic', () => {
   describe('generateBoard', () => {
@@ -214,6 +216,76 @@ describe('bingoLogic', () => {
       expect(result.has(12)).toBe(true);
       expect(result.has(18)).toBe(true);
       expect(result.has(24)).toBe(true);
+    });
+  });
+
+  describe('generateScavengerList', () => {
+    it('should return exactly 24 items', () => {
+      const list = generateScavengerList();
+      expect(list).toHaveLength(24);
+    });
+
+    it('should have all items unmarked', () => {
+      const list = generateScavengerList();
+      list.forEach((item) => {
+        expect(item.isMarked).toBe(false);
+      });
+    });
+
+    it('should have no free spaces', () => {
+      const list = generateScavengerList();
+      list.forEach((item) => {
+        expect(item.isFreeSpace).toBe(false);
+      });
+    });
+
+    it('should have sequential IDs from 0 to 23', () => {
+      const list = generateScavengerList();
+      const ids = list.map((item) => item.id);
+      expect(ids).toEqual(Array.from({ length: 24 }, (_, i) => i));
+    });
+
+    it('should have unique question texts', () => {
+      const list = generateScavengerList();
+      const texts = new Set(list.map((item) => item.text));
+      expect(texts.size).toBe(24);
+    });
+
+    it('should produce non-empty text for every item', () => {
+      const list = generateScavengerList();
+      list.forEach((item) => {
+        expect(item.text.length).toBeGreaterThan(0);
+      });
+    });
+
+    it('should only contain texts from the known questions pool', () => {
+      const list = generateScavengerList();
+      list.forEach((item) => {
+        expect(questions).toContain(item.text);
+      });
+    });
+
+    it('should produce a different order on successive calls', () => {
+      // Run several times; with 50+ questions the probability all match is astronomically low
+      const results = Array.from({ length: 5 }, () =>
+        generateScavengerList().map((item) => item.text)
+      );
+      const allIdentical = results.every(
+        (r) => r.join('|') === results[0].join('|')
+      );
+      expect(allIdentical).toBe(false);
+    });
+
+    it('should allow toggling an item via toggleSquare', () => {
+      const list = generateScavengerList();
+      const target = list[0];
+      expect(target.isMarked).toBe(false);
+
+      const updated = toggleSquare(list, target.id);
+      expect(updated[0].isMarked).toBe(true);
+
+      const reverted = toggleSquare(updated, target.id);
+      expect(reverted[0].isMarked).toBe(false);
     });
   });
 });

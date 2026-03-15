@@ -50,6 +50,20 @@ export function generateBoard(): BingoSquareData[] {
 }
 
 /**
+ * Generate a flat list of 24 random questions for Scavenger Hunt mode.
+ * No grid positions, no free space — just a shuffled subset.
+ */
+export function generateScavengerList(): BingoSquareData[] {
+  const shuffled = shuffleArray(questions).slice(0, 24);
+  return shuffled.map((text, i) => ({
+    id: i,
+    text,
+    isMarked: false,
+    isFreeSpace: false,
+  }));
+}
+
+/**
  * Toggle a square's marked state
  */
 export function toggleSquare(board: BingoSquareData[], squareId: number): BingoSquareData[] {
